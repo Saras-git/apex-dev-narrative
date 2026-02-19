@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail, Download, ExternalLink } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
-import profileImg from "@/assets/profile.jpg";
+import profileImg from "@/assets/avatar.png";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
 
 const socialLinks = [
-  { icon: Github, label: "GitHub", href: "https://github.com" },
-  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com" },
-  { icon: ExternalLink, label: "Naukri", href: "https://naukri.com" },
-  { icon: Mail, label: "Email", href: "mailto:dev@example.com" },
+  { icon: Github, label: "GitHub", href: "https://github.com/Saras-git" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/saraswathis02/" },
+  { icon: ExternalLink, label: "Naukri", href: "https://www.naukri.com/mnjuser/profile?id=&altresid" },
+  { icon: Mail, label: "Email", href: "saraswathisubbaiah02@gmail.com" },
 ];
 
 export default function HeroSection() {
@@ -65,7 +65,7 @@ export default function HeroSection() {
                 <img
                   src={profileImg}
                   alt="Developer Profile"
-                  className="w-full h-full object-cover"
+                  className="w-30% h-30% object-cover"
                 />
               </div>
               <div className="absolute bottom-4 right-4 bg-card/90 border border-primary/40 rounded-full px-3 py-1 flex items-center gap-2 glass-card">
@@ -79,22 +79,39 @@ export default function HeroSection() {
         {/* Content */}
         <div className="text-center lg:text-left">
           <motion.div variants={fadeInUp}>
-            <span className="inline-block px-4 py-1 rounded-full text-xs font-mono font-medium bg-primary/10 border border-primary/30 text-primary mb-4">
-              👋 Hello, World!
-            </span>
+            <motion.span
+  whileHover={{ scale: 1.1 }}
+  animate={{ boxShadow: ["0 0 0px #00f2ff", "0 0 20px #00f2ff", "0 0 0px #00f2ff"] }}
+  transition={{ duration: 2, repeat: Infinity }}
+  className="inline-block px-5 py-1 rounded-full text-xs font-mono font-semibold 
+  bg-gradient-to-r from-cyan-400/20 to-violet-500/20 
+  border border-cyan-400/40 text-cyan-300 mb-4 backdrop-blur-md"
+>
+  👋 Hello!
+</motion.span>
+
           </motion.div>
 
           <motion.h1
-            variants={fadeInUp}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold font-['Space_Grotesk'] leading-tight mb-4"
-          >
-            I'm <span className="gradient-text">Alex Kumar</span>
-          </motion.h1>
+  variants={fadeInUp}
+  className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4"
+>
+  I'm{" "}
+  <span className="relative inline-block">
+    <span className="bg-gradient-to-r from-cyan-400 via-violet-500 to-pink-500 bg-clip-text text-transparent animate-gradient-x">
+      Saraswathi
+    </span>
+
+    {/* Glow layer */}
+    <span className="absolute inset-0 blur-xl opacity-40 bg-gradient-to-r from-cyan-400 via-violet-500 to-pink-500"></span>
+  </span>
+</motion.h1>
+
 
           <motion.div variants={fadeInUp} className="mb-4">
             <span className="text-xl md:text-2xl font-mono text-muted-foreground">
               &lt;
-              <span className="text-primary font-semibold">Full-Stack Developer</span>
+              <span className="text-primary font-semibold">Aspiring Machine Learning Engineer | Data Analyst</span>
               &nbsp;/&gt;
             </span>
           </motion.div>
@@ -103,8 +120,8 @@ export default function HeroSection() {
             variants={fadeInUp}
             className="text-base md:text-lg text-muted-foreground max-w-lg leading-relaxed mb-8"
           >
-            Crafting scalable, high-performance applications with modern architectures.
-            Passionate about clean code, elegant UI, and solving complex engineering challenges.
+            Crafting intelligent, data-driven solutions using machine learning models and advanced analytics.
+Passionate about clean data pipelines, insightful visualizations, and solving complex business problems with predictive intelligence.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -113,15 +130,16 @@ export default function HeroSection() {
             className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8"
           >
             <motion.a
-              href="/resume.pdf"
-              download
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-glow flex items-center gap-2 px-6 py-3 rounded-xl text-primary-foreground font-semibold text-sm"
-            >
-              <Download size={16} />
-              Download Resume
-            </motion.a>
+  href="\SARASWATHI S_CV.pdf"
+  download
+  whileHover={{ scale: 1.08, rotate: 1 }}
+  whileTap={{ scale: 0.92 }}
+  className="btn-glow flex items-center gap-2 px-6 py-3 rounded-xl text-primary-foreground font-semibold text-sm"
+>
+  <Download size={16} className="animate-bounce" />
+  Download Resume
+</motion.a>
+
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

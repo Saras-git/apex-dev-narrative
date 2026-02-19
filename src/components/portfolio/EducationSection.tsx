@@ -5,28 +5,28 @@ import { staggerContainer, fadeInUp } from "@/lib/animations";
 
 const education = [
   {
-    degree: "B.Tech in Computer Science & Engineering",
-    institution: "National Institute of Technology",
-    year: "2020 – 2024",
-    score: "CGPA: 8.7 / 10",
+    degree: "B.Tech in Artificial Intelligence & Data science",
+    institution: "Frabcis Xavier Engineering College",
+    year: "2022 – 2026",
+    score: "CGPA: 8.9 / 10",
     type: "Degree",
     highlight: true,
   },
   {
     degree: "Higher Secondary (12th Grade)",
-    institution: "Delhi Public School, New Delhi",
-    year: "2019 – 2020",
-    score: "92.4%",
-    type: "College",
-    highlight: false,
+    institution: "Reach Matric Higher Secondary School",
+    year: "2021 – 2022",
+    score: "Percentage: 86.6%",
+    type: "School",
+    highlight: true,
   },
   {
     degree: "Secondary (10th Grade)",
-    institution: "Kendriya Vidyalaya, New Delhi",
-    year: "2017 – 2018",
-    score: "95.2%",
+    institution: "Reach Matric Higher Secondary School",
+    year: "2019 – 2020",
+    score: "Percentage: 75%",
     type: "School",
-    highlight: false,
+    highlight: true,
   },
 ];
 

@@ -1,14 +1,29 @@
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Target, Code2, Lightbulb, Rocket } from "lucide-react";
 import { staggerContainer, fadeInUp, fadeInLeft, fadeInRight } from "@/lib/animations";
 
 const highlights = [
-  { icon: Target, title: "Career Objective", text: "To architect and deliver robust, scalable software solutions that create meaningful user experiences while pushing the boundaries of modern web technology." },
-  { icon: Code2, title: "Technical Strengths", text: "Expert in full-stack development with deep proficiency in React, TypeScript, Python, and cloud infrastructure. Strong focus on system design and performance optimization." },
-  { icon: Lightbulb, title: "Problem Solving", text: "Analytical thinker who breaks down complex problems into elegant, maintainable solutions. Experienced in Agile methodologies and collaborative development workflows." },
-  { icon: Rocket, title: "Development Interests", text: "Passionate about microservices architecture, real-time systems, AI/ML integration, and building developer tools that improve team productivity and code quality." },
+  {
+    icon: Target,
+    title: "Career Objective",
+    text: "To design intelligent machine learning solutions and data-driven systems that transform complex datasets into meaningful insights and support real-world decision-making."
+  },
+  {
+    icon: Code2,
+    title: "Technical Strengths",
+    text: "Strong expertise in Python, SQL, data analysis, and machine learning with hands-on experience in predictive modeling, visualization, and statistical analysis."
+  },
+  {
+    icon: Lightbulb,
+    title: "Analytical Thinking",
+    text: "Skilled in identifying trends, interpreting data patterns, and solving complex analytical challenges using structured reasoning and data-driven approaches."
+  },
+  {
+    icon: Rocket,
+    title: "Interests & Focus",
+    text: "Passionate about AI, machine learning, predictive analytics, and building intelligent systems that deliver impactful insights and automation."
+  },
 ];
 
 export default function AboutSection() {
@@ -20,6 +35,7 @@ export default function AboutSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-background via-surface/30 to-background" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* Heading */}
         <motion.div
           variants={staggerContainer}
@@ -30,71 +46,105 @@ export default function AboutSection() {
           <motion.p variants={fadeInUp} className="text-primary font-mono text-sm mb-2">
             &lt;about me /&gt;
           </motion.p>
+
           <motion.h2 variants={fadeInUp} className="section-heading text-4xl md:text-5xl gradient-text mb-4">
             About Me
           </motion.h2>
-          <motion.div variants={fadeInUp} className="w-24 h-1 rounded-full mx-auto" style={{ background: "var(--gradient-primary)" }} />
+
+          <motion.div
+            variants={fadeInUp}
+            className="w-24 h-1 rounded-full mx-auto animate-gradient"
+            style={{ background: "var(--gradient-primary)" }}
+          />
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Left: summary */}
+
+          {/* LEFT PANEL */}
           <motion.div
             variants={fadeInLeft}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
             className="space-y-6"
           >
-            <div className="glass-card rounded-2xl p-8 neon-border">
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              transition={{ type: "spring", stiffness: 200 }}
+              className="glass-card rounded-2xl p-8 neon-border"
+            >
               <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-foreground mb-4">
-                Full-Stack Engineer &{" "}
-                <span className="gradient-text">Problem Solver</span>
+                Machine Learning Engineer &{" "}
+                <span className="gradient-text">Data Analyst</span>
               </h3>
+
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  I'm a dedicated full-stack developer with a passion for creating performant, 
-                  accessible, and visually compelling digital experiences. With expertise spanning 
-                  modern frontend frameworks to cloud infrastructure, I bring ideas to life with 
-                  precision and creativity.
+                  I’m a data-driven problem solver passionate about transforming raw data into
+                  actionable insights and intelligent solutions. I specialize in machine learning,
+                  statistical analysis, and data visualization to build predictive models that
+                  support smart decision-making.
                 </p>
+
                 <p>
-                  My engineering philosophy centers on writing clean, testable, and maintainable 
-                  code. I thrive in collaborative environments and consistently deliver 
-                  production-ready solutions that scale to meet evolving business demands.
+                  My workflow focuses on clean data pipelines, efficient algorithms, and scalable
+                  analytical systems. I enjoy working with real-world datasets, uncovering hidden
+                  patterns, and delivering solutions that generate measurable impact.
                 </p>
+
                 <p>
-                  Beyond coding, I'm an avid guitarist — music has sharpened my creativity and 
-                  attention to detail, qualities I bring to every line of code I write.
+                  I continuously explore new tools in AI, analytics, and automation to stay ahead
+                  of evolving technology and deliver innovative data solutions.
                 </p>
               </div>
 
+              {/* Skills */}
               <div className="mt-6 flex flex-wrap gap-3">
-                {["React", "TypeScript", "Python", "Node.js", "AWS", "Docker"].map((tech) => (
+                {[
+                  "Python",
+                  "SQL",
+                  "Machine Learning",
+                  "Pandas",
+                  "NumPy",
+                  "Scikit-learn",
+                  "Power BI",
+                  "Matplotlib",
+                  "Seaborn",
+                  "EDA",
+                  "Predictive Modeling"
+                ].map((tech) => (
                   <span
                     key={tech}
-                    className="px-3 py-1 text-xs font-mono font-medium rounded-full bg-primary/10 border border-primary/30 text-primary"
+                    className="px-3 py-1 text-xs font-mono font-medium rounded-full bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition"
                   >
                     {tech}
                   </span>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4">
               {[
-                { num: "3+", label: "Years Exp." },
-                { num: "20+", label: "Projects" },
-                { num: "10+", label: "Technologies" },
+                { num: "10+", label: "Projects" },
+                { num: "5+", label: "ML Models" },
+                { num: "12+", label: "Technologies" },
               ].map((stat) => (
-                <div key={stat.label} className="glass-card rounded-xl p-4 text-center neon-border">
-                  <div className="text-2xl font-bold gradient-text font-['Space_Grotesk']">{stat.num}</div>
+                <motion.div
+                  key={stat.label}
+                  whileHover={{ y: -5, scale: 1.03 }}
+                  transition={{ type: "spring", stiffness: 250 }}
+                  className="glass-card rounded-xl p-4 text-center neon-border"
+                >
+                  <div className="text-2xl font-bold gradient-text font-['Space_Grotesk']">
+                    {stat.num}
+                  </div>
                   <div className="text-xs text-muted-foreground mt-1">{stat.label}</div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </motion.div>
 
-          {/* Right: highlights */}
+          {/* RIGHT PANEL */}
           <motion.div
             variants={staggerContainer}
             initial="hidden"
@@ -105,21 +155,32 @@ export default function AboutSection() {
               <motion.div
                 key={item.title}
                 variants={fadeInRight}
-                whileHover={{ scale: 1.02, y: -4 }}
-                className="glass-card rounded-2xl p-6 neon-border group cursor-default transition-all duration-300 hover:border-primary/40"
+                whileHover={{
+                  scale: 1.04,
+                  y: -6,
+                  boxShadow: "0 0 30px rgba(0,255,255,0.2)"
+                }}
+                transition={{ type: "spring", stiffness: 260 }}
+                className="glass-card rounded-2xl p-6 neon-border group cursor-default transition-all duration-300 hover:border-primary/50"
               >
-                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                  <item.icon size={20} className="text-primary" />
+                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition">
+                  <item.icon size={20} className="text-primary group-hover:scale-110 transition" />
                 </div>
+
                 <h4 className="font-['Space_Grotesk'] font-semibold text-foreground mb-2 text-sm">
                   {item.title}
                 </h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">{item.text}</p>
+
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {item.text}
+                </p>
               </motion.div>
             ))}
           </motion.div>
+
         </div>
       </div>
     </section>
   );
 }
+
