@@ -4,42 +4,63 @@ import { staggerContainer, fadeInUp, scaleIn } from "@/lib/animations";
 
 const technicalSkills = [
   { category: "Languages", skills: [
-    { name: "Python", level: 90 },
-    { name: "JavaScript / TypeScript", level: 88 },
+    { name: "Python", level: 85 },
+    { name: "JavaScript ", level: 80 },
     { name: "Java", level: 75 },
-    { name: "C++", level: 70 },
+    { name: "C", level: 90 },
   ]},
   { category: "Frontend", skills: [
-    { name: "React.js", level: 92 },
-    { name: "HTML5 / CSS3 / Tailwind", level: 95 },
-    { name: "Next.js", level: 80 },
-    { name: "Framer Motion", level: 78 },
+    { name: "React.js", level: 83 },
+    { name: "HTML5", level: 95 },
+    { name: "CSS", level: 80 },
+    { name: "Tailwind", level: 75 },
+    { name: "Streamlit", level: 80 },
   ]},
   { category: "Backend", skills: [
-    { name: "Node.js / Express", level: 85 },
+    { name: "Node.js", level: 85 },
     { name: "Flask / FastAPI", level: 88 },
-    { name: "REST APIs", level: 90 },
-    { name: "GraphQL", level: 72 },
+
   ]},
   { category: "Databases", skills: [
     { name: "PostgreSQL", level: 85 },
-    { name: "MongoDB", level: 82 },
-    { name: "Redis", level: 75 },
-    { name: "MySQL", level: 80 },
+    { name: "MongoDB", level: 70 },
+    { name: "MySQL", level: 85 },
   ]},
 ];
 
+
 const toolSkills = [
-  "Docker", "Kubernetes", "AWS", "Git / GitHub", "CI/CD", "Linux", "Postman", "Figma",
+  { category: "Machine Learning & AI Tools", skills: [
+    { name: "Numpy"},
+    { name: "Pandas"},
+    { name: "Matplotlib/Seaborn"},
+    { name: "Scikit Learn"},
+    { name: "Tensorflow"},
+    { name: "Keras"},
+  ]},
+  { category: "Data Tools", skills: [
+    { name: "SQL"},
+    { name: "Excel"},
+    { name: "PowerBI"},
+    { name: "Tableau"},
+    { name: "Tensorflow"},
+    { name: "Keras"},
+  ]},
+  { category: "AI-Specific Tools", skills: [
+    { name: "Open CV"},
+    { name: "NLTK"},
+    { name: "Rapid Miner"},
+  ]},
 ];
 
 const nonTechnical = [
-  { name: "Guitar Playing", emoji: "🎸", desc: "Classical & Rock" },
+  { name: "Badminton Player", emoji: "🏸", desc: "Competitive Mindset" },
   { name: "Communication", emoji: "🗣️", desc: "Public Speaking" },
   { name: "Leadership", emoji: "👥", desc: "Team Management" },
   { name: "Creativity", emoji: "🎨", desc: "Design Thinking" },
   { name: "Quick Learning", emoji: "⚡", desc: "Adaptability" },
 ];
+
 
 function SkillBar({ name, level, delay = 0 }: { name: string; level: number; delay?: number }) {
   const ref = useRef(null);
@@ -123,20 +144,31 @@ export default function SkillsSection() {
             <span className="w-2 h-2 rounded-full bg-violet" />
             Tools & Technologies
           </h3>
-          <div className="flex flex-wrap gap-3">
-            {toolSkills.map((tool, i) => (
-              <motion.span
-                key={tool}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: i * 0.05, duration: 0.3 }}
-                whileHover={{ scale: 1.1, y: -2 }}
-                className="px-4 py-2 text-sm font-medium rounded-xl glass-card border border-violet/30 text-violet hover:border-violet/60 transition-colors cursor-default"
-              >
-                {tool}
-              </motion.span>
-            ))}
-          </div>
+          <div className="space-y-6">
+  {toolSkills.map((group, gi) => (
+    <div key={group.category}>
+      <h4 className="text-sm font-semibold text-muted-foreground mb-3">
+        {group.category}
+      </h4>
+
+      <div className="flex flex-wrap gap-3">
+        {group.skills.map((tool, ti) => (
+          <motion.span
+            key={tool.name}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ delay: ti * 0.05, duration: 0.3 }}
+            whileHover={{ scale: 1.1, y: -2 }}
+            className="px-4 py-2 text-sm font-medium rounded-xl glass-card border border-violet/30 text-violet hover:border-violet/60 transition-colors cursor-default"
+          >
+            {tool.name}
+          </motion.span>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+
         </motion.div>
 
         {/* Non-Technical Skills */}
