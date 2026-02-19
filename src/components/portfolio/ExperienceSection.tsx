@@ -12,23 +12,26 @@ const experiences = [
     description: [
       "Analyzed aerospace propulsion system datasets from 5+ engine testing procedures.",
       "Monitored real-time engine performance parameters during live testing operations.",
-      "Understood cryogenic propulsion systems and safety protocols in aerospace engineering.",
+      "Studied cryogenic propulsion systems and safety mechanisms in high-performance aerospace environments.",
     ],
-    tech: ["Data Analysis", "Aerospace Systems", "Real-Time Monitoring"],
+    tech: ["Data Analysis", "Real-Time Monitoring", "Aerospace Systems"],
   },
   {
-    role: "Industrial Training – Technohacks Edutech",
+    role: "Machine Learning Intern – Technohacks Edutech",
     company: "Technohacks Edutech",
     duration: "1 Month",
-    location: "Online",
+    location: "Remote",
     description: [
-      "Performed data preprocessing and exploratory data analysis (EDA) on structured datasets.",
-      "Developed interactive dashboards using Python and Power BI.",
-      "Improved insights visualization for better business intelligence decisions.",
+      "Performed end-to-end machine learning workflow including data preprocessing, feature engineering, and model evaluation.",
+      "Built regression and classification models using Scikit-learn to solve real-world predictive problems.",
+      "Implemented Exploratory Data Analysis (EDA) using Pandas, NumPy, Matplotlib, and Seaborn.",
+      "Optimized model performance using hyperparameter tuning and cross-validation techniques.",
+      "Developed interactive ML dashboards integrating Python models with Power BI for business insights.",
     ],
-    tech: ["Python", "Power BI", "EDA", "Data Visualization"],
+    tech: ["Python", "Scikit-learn", "Pandas", "NumPy", "Matplotlib", "Seaborn", "Power BI"],
   },
 ];
+
 
 export default function ExperienceSection() {
   const ref = useRef(null);
