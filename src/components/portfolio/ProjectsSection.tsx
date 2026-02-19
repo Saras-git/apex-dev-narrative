@@ -29,9 +29,9 @@ const projects = [
       "ML",
       "AI",
     ],
-    github: "https://github.com/Saras-git/organ‑compatibility‑predictor", // replace with actual
+    github: "https://github.com/Saras-git/Healytics-AI", // replace with actual
     live: "https://example.com/organ‑match",
-    featured: false,
+    featured: true,
   },
   {
     title: "AI Based Smart Agricultural System",
@@ -48,9 +48,9 @@ const projects = [
       "ML",
       "MySql"
     ],
-    github: "https://github.com/Saras-git/crop‑yield‑prediction", // replace with actual
+    github: "https://github.com/Saras-git/Smart_Agriculture_Prediction_System", // replace with actual
     live: "https://share.streamlit.io/…", // replace with actual
-    featured: false,
+    featured: true,
   },
   {
     title: "Power BI Dashboard for Global OTT Trends",
@@ -66,7 +66,7 @@ const projects = [
       "DAX",
       "ETL",
     ],
-    github: "https://github.com/Saras-git/ott‑trends‑powerbi", // replace with actual
+    github: "https://github.com/Saras-git/ott-trends-dashboard", // replace with actual
     live: "https://app.powerbi.com/view?r=…", // replace with actual
     featured: true,
   },
@@ -87,7 +87,7 @@ const projects = [
     "JSON",
     "ETL Pipeline",
   ],
-  github: "https://github.com/Saras-git", // replace with repo if available
+  github: "https://github.com/Saras-git/regional-road-express-system", // replace with repo if available
   live: "#",
   featured: true,
 },
@@ -104,7 +104,7 @@ const projects = [
       "streamlit",
       "machine learning",
     ],
-    github: "https://github.com/Saras-git/real-time-social-media-sentiment", // replace with actual
+    github: "https://github.com/Saras-git", // replace with actual
     live: "https://example.com/sentiment‑dash",
     featured: true,
   },
@@ -118,7 +118,7 @@ const projects = [
       "Random Module",
       "CLI",
     ],
-    github: "https://github.com/Saras-git",
+    github: "https://github.com/Saras-git/python-projects",
     live: "#",
     featured: false,
   },
@@ -138,9 +138,9 @@ const projects = [
     "NumPy",
     "Pandas",
   ],
-  github: "https://github.com/Saras-git", // replace with repo link if available
+  github: "https://github.com/Saras-git/defect-detection-in-industry", // replace with repo link if available
   live: "#",
-  featured: true,
+  featured:false,
 },
   
   
@@ -164,11 +164,9 @@ export default function ProjectsSection() {
           animate={isInView ? "visible" : "hidden"}
           className="text-center mb-16"
         >
-          <motion.p variants={fadeInUp} className="text-primary font-mono text-sm mb-2">
-            &lt;projects /&gt;
-          </motion.p>
+          
           <motion.h2 variants={fadeInUp} className="section-heading text-4xl md:text-5xl gradient-text mb-4">
-            Featured Work
+            Technical Projects
           </motion.h2>
           <motion.div variants={fadeInUp} className="w-24 h-1 rounded-full mx-auto" style={{ background: "var(--gradient-primary)" }} />
         </motion.div>
