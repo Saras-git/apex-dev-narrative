@@ -2,42 +2,151 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { staggerContainer, fadeInUp, scaleIn } from "@/lib/animations";
-import project1 from "@/assets/project1.jpg";
-import project2 from "@/assets/project2.jpg";
-import project3 from "@/assets/project3.jpg";
+import project1 from "@/assets/project1.png";
+import project2 from "@/assets/project2.png";
+import project3 from "@/assets/project3.png";
+import project4 from "@/assets/project4.png";
+import project5 from "@/assets/project5.png";
+import project6 from "@/assets/project6.png";
+import project7 from "@/assets/project7.png";
 
 const projects = [
   {
-    title: "AnalyticsPro Dashboard",
+    title: "Organ Compatibility Prediction System",
     description:
-      "A high-performance analytics platform featuring real-time data visualization, customizable widgets, and role-based access control for enterprise teams.",
+      "Built an AI‑based system to automate donor–recipient matching using Random Forest and centralized medical data, enabling real‑time alerts to improve transplant coordination and accuracy.",
     image: project1,
-    tech: ["React", "TypeScript", "WebSocket", "PostgreSQL", "Redis", "Docker"],
-    github: "https://github.com",
-    live: "https://example.com",
-    featured: true,
-  },
-  {
-    title: "ShopStream E-Commerce",
-    description:
-      "Full-featured e-commerce platform with AI-powered product recommendations, Stripe integration, and a blazing-fast Next.js frontend.",
-    image: project2,
-    tech: ["Next.js", "Node.js", "MongoDB", "Stripe", "Tailwind CSS"],
-    github: "https://github.com",
-    live: "https://example.com",
+    tech: [
+      "Python",
+      "Scikit‑Learn",
+      "FastAPI",
+      "My SQL",
+      "React",
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "NLTK",
+      "ML",
+      "AI",
+    ],
+    github: "https://github.com/Saras-git/organ‑compatibility‑predictor", // replace with actual
+    live: "https://example.com/organ‑match",
     featured: false,
   },
   {
-    title: "ConvoAI Chatbot Platform",
+    title: "AI Based Smart Agricultural System",
     description:
-      "Intelligent conversational AI interface with streaming responses, conversation history, and support for multiple LLM providers via a unified API.",
+      "Enhanced a Streamlit web application integrating multiple machine learning models to predict crop yield and plant health using environmental data for precision agriculture.",
+    image: project2,
+    tech: [
+      "Python",
+      "Streamlit",
+      "Scikit‑Learn",
+      "XGBoost",
+      "Pandas",
+      "NumPy",
+      "ML",
+      "MySql"
+    ],
+    github: "https://github.com/Saras-git/crop‑yield‑prediction", // replace with actual
+    live: "https://share.streamlit.io/…", // replace with actual
+    featured: false,
+  },
+  {
+    title: "Power BI Dashboard for Global OTT Trends",
+    description:
+      "Developed an AI‑driven platform to ingest OTT content data, perform sentiment and trend analysis, and visualize predictive insights through an interactive Power BI dashboard.",
     image: project3,
-    tech: ["React", "Python", "FastAPI", "OpenAI API", "WebSockets"],
-    github: "https://github.com",
-    live: "https://example.com",
+    tech: [
+      "Power BI",
+      "Python",
+      "Pandas",
+      "Scikit‑Learn",
+      "REST API",
+      "DAX",
+      "ETL",
+    ],
+    github: "https://github.com/Saras-git/ott‑trends‑powerbi", // replace with actual
+    live: "https://app.powerbi.com/view?r=…", // replace with actual
     featured: true,
   },
+  {
+  title: "Regional Road Express Dashboard & Analytics",
+  description:
+    "Built a full-stack logistics analytics platform with React dashboards, FastAPI APIs, MySQL data pipeline, ML-based revenue prediction, and Power BI visualizations to monitor routes, profit/loss, and optimize routing decisions.",
+  image: project4, // change image if needed
+  tech: [
+    "React",
+    "FastAPI",
+    "Python",
+    "MySQL",
+    "Power BI",
+    "REST API",
+    "Machine Learning",
+    "Dijkstra Algorithm",
+    "JSON",
+    "ETL Pipeline",
+  ],
+  github: "https://github.com/Saras-git", // replace with repo if available
+  live: "#",
+  featured: true,
+},
+
+  {
+    title: "AI System for Social Media Sentiment Analysis and Dashboard",
+    description:
+      "Established a deep learning–based system to analyze and visualize real‑time social media sentiment trends for actionable insights across platforms.",
+    image: project5,
+    tech: [
+      "Python",
+      "NLTK",
+      "Power BI",
+      "streamlit",
+      "machine learning",
+    ],
+    github: "https://github.com/Saras-git/real-time-social-media-sentiment", // replace with actual
+    live: "https://example.com/sentiment‑dash",
+    featured: true,
+  },
+  {
+    title: "Number Guessing Game",
+    description:
+      "A Python console game where users guess a randomly generated number within a chosen range and limited attempts, featuring win/lose feedback messages.",
+    image: project6,
+    tech: [
+      "Python",
+      "Random Module",
+      "CLI",
+    ],
+    github: "https://github.com/Saras-git",
+    live: "#",
+    featured: false,
+  },
+  {
+  title: "Automated Visual Defect Detection System",
+  description:
+    "Developed a fully automated AI-powered inspection system using CNN and computer vision to detect manufacturing defects in real time, log structured results in MySQL, and visualize quality metrics via Grafana dashboards.",
+  image: project7, // change if you want different image
+  tech: [
+    "Python",
+    "TensorFlow",
+    "Keras",
+    "OpenCV",
+    "CNN",
+    "MySQL",
+    "Grafana",
+    "NumPy",
+    "Pandas",
+  ],
+  github: "https://github.com/Saras-git", // replace with repo link if available
+  live: "#",
+  featured: true,
+},
+  
+  
+  
 ];
+
 
 export default function ProjectsSection() {
   const ref = useRef(null);
