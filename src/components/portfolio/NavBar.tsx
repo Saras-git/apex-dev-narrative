@@ -5,10 +5,11 @@ import { Menu, X } from "lucide-react";
 const navItems = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
-  { id: "skills", label: "Skills" },
-  { id: "education", label: "Education" },
   { id: "experience", label: "Experience" },
-  { id: "projects", label: "Projects" },
+  { id: "education", label: "Education" },
+  { id: "projects", label: "Project" },
+  { id: "skills", label: "Skills" },
+  { id: "certification", label: "Certification" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -51,9 +52,7 @@ export default function NavBar({ activeSection, onNavClick }: NavBarProps) {
             className="cursor-pointer"
             onClick={() => handleClick("home")}
           >
-            <span className="font-['Space_Grotesk'] font-bold text-xl gradient-text">
-              &lt;Dev/&gt;
-            </span>
+            
           </motion.div>
 
           {/* Desktop Nav */}
