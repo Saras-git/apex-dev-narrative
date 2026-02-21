@@ -191,7 +191,47 @@ export default function ContactSection() {
         </div>
 
         {/* Footer */}
-        
+        <div className="relative mt-24 pt-12 border-t border-border/40 text-center overflow-hidden">
+
+  {/* glow background accent */}
+  <div className="absolute inset-0 flex justify-center pointer-events-none">
+    <div className="w-72 h-72 bg-primary/10 blur-3xl rounded-full"></div>
+  </div>
+
+  {/* content */}
+  <motion.div
+    initial={{ opacity: 0, y: 40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.7 }}
+    className="relative z-10"
+  >
+
+    {/* main line */}
+    <p className="text-muted-foreground text-sm tracking-wide">
+      © {new Date().getFullYear()}{" "}
+      <span className="font-semibold bg-gradient-to-r from-primary via-purple-400 to-pink-400 bg-clip-text text-transparent">
+        Saras
+      </span>
+      . All rights reserved.
+    </p>
+
+    {/* tagline */}
+    <p className="text-xs text-muted-foreground mt-3 tracking-widest uppercase">
+      Designed • Developed • Engineered
+    </p>
+
+    {/* divider glow line */}
+    <div className="mt-6 flex justify-center">
+      <div className="h-[2px] w-40 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+    </div>
+
+    {/* signature line */}
+    <p className="text-xs text-muted-foreground mt-4 italic">
+      Turning ideas into elegant digital experiences.
+    </p>
+
+  </motion.div>
+</div>
       </div>
     </section>
   );

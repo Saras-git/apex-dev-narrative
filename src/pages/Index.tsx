@@ -31,7 +31,7 @@ export default function Index() {
             <AboutSection />
             <ProfilesSection />
             <SkillsSection />
-            <ProjectsSection />
+            <ProjectsSection isHome />
             <ContactSection />
           </>
         )}

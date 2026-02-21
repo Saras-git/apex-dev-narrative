@@ -14,8 +14,8 @@ const profiles = [
     name: "GitHub",
     desc: "Open source contributions & personal projects",
     stats: [
-      { label: "Repositories", value: 10 },
-      { label: "Contributions", value: "40+" }
+      { label: "Repositories", value: 14 },
+      { label: "Contributions", value: "100+" }
     ],
     url: "https://github.com/Saras-git"
   },
@@ -31,14 +31,14 @@ const profiles = [
     name: "SkillRack",
     desc: "Programming practice & skill development",
     stats: [{ label: "Problems Solved", value: "800+" }],
-    url: "http://www.skillrack.com/profile/426288"
+    url: "http://www.skillrack.com/profile/426288/49a767282efeeddb2e35f83e26020ad8f80ac59b"
   },
   {
     logo: NaukriLogo,
     name: "Naukri",
     desc: "Career opportunities & recruiter access",
     stats: [],
-    url: "#"
+    url: "https://www.naukri.com/mnjuser/profile?id=&altresid"
   },
   {
     logo: HackerRankLogo,

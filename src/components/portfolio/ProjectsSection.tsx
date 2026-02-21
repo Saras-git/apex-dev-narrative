@@ -1,5 +1,5 @@
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { staggerContainer, fadeInUp, scaleIn } from "@/lib/animations";
 import project1 from "@/assets/project1.png";
@@ -142,21 +142,22 @@ const projects = [
   live: "#",
   featured:false,
 },
-  
-  
-  
 ];
-
-
-export default function ProjectsSection() {
+export default function ProjectsSection({ isHome = false }: { isHome?: boolean }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const [showAll, setShowAll] = useState(false);
+
+  // ⭐ LOGIC ONLY HERE
+  const visibleProjects = isHome && !showAll ? projects.slice(0, 3) : projects;
 
   return (
     <section id="projects" className="py-24 relative" ref={ref}>
       <div className="absolute inset-0 bg-gradient-to-b from-background via-surface/20 to-background" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
         {/* Heading */}
         <motion.div
           variants={staggerContainer}
@@ -164,20 +165,25 @@ export default function ProjectsSection() {
           animate={isInView ? "visible" : "hidden"}
           className="text-center mb-16"
         >
-          
           <motion.h2 variants={fadeInUp} className="section-heading text-4xl md:text-5xl gradient-text mb-4">
             Technical Projects
           </motion.h2>
-          <motion.div variants={fadeInUp} className="w-24 h-1 rounded-full mx-auto" style={{ background: "var(--gradient-primary)" }} />
+
+          <motion.div
+            variants={fadeInUp}
+            className="w-24 h-1 rounded-full mx-auto"
+            style={{ background: "var(--gradient-primary)" }}
+          />
         </motion.div>
 
+        {/* Projects Grid */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {projects.map((project) => (
+          {visibleProjects.map((project) => (
             <motion.div
               key={project.title}
               variants={scaleIn}
@@ -185,6 +191,7 @@ export default function ProjectsSection() {
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className="glass-card rounded-2xl overflow-hidden border border-border hover:border-primary/40 transition-colors duration-300 group"
             >
+              
               {/* Image */}
               <div className="relative overflow-hidden h-48">
                 <img
@@ -192,8 +199,9 @@ export default function ProjectsSection() {
                   alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
+
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
-                
+
                 {project.featured && (
                   <div className="absolute top-3 right-3">
                     <span className="text-xs font-mono px-2 py-1 rounded-full bg-primary/90 text-primary-foreground font-medium">
@@ -202,8 +210,9 @@ export default function ProjectsSection() {
                   </div>
                 )}
 
-                {/* Hover overlay links */}
+                {/* Hover Icons */}
                 <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  
                   <motion.a
                     href={project.github}
                     target="_blank"
@@ -214,6 +223,7 @@ export default function ProjectsSection() {
                   >
                     <Github size={18} />
                   </motion.a>
+
                   <motion.a
                     href={project.live}
                     target="_blank"
@@ -224,6 +234,7 @@ export default function ProjectsSection() {
                   >
                     <ExternalLink size={18} />
                   </motion.a>
+
                 </div>
               </div>
 
@@ -232,9 +243,11 @@ export default function ProjectsSection() {
                 <h3 className="font-['Space_Grotesk'] font-bold text-lg text-foreground mb-2">
                   {project.title}
                 </h3>
+
                 <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                   {project.description}
                 </p>
+
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.tech.map((t) => (
                     <span
@@ -245,6 +258,7 @@ export default function ProjectsSection() {
                     </span>
                   ))}
                 </div>
+
                 <div className="flex gap-3">
                   <a
                     href={project.github}
@@ -254,6 +268,7 @@ export default function ProjectsSection() {
                   >
                     <Github size={14} /> Code
                   </a>
+
                   <a
                     href={project.live}
                     target="_blank"
@@ -267,6 +282,18 @@ export default function ProjectsSection() {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* ⭐ Show More Button (ONLY HOME) */}
+        {isHome && projects.length > 3 && (
+          <div className="text-center mt-12">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="px-6 py-2 text-sm font-medium rounded-lg border border-primary/40 text-primary hover:bg-primary/10 transition"
+            >
+              {showAll ? "Show Less" : "Show More Projects"}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
