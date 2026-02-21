@@ -96,10 +96,10 @@ export default function HeroSection() {
   variants={fadeInUp}
   className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4"
 >
-  I'm{" "}
+  
   <span className="relative inline-block">
     <span className="bg-gradient-to-r from-cyan-400 via-violet-500 to-pink-500 bg-clip-text text-transparent animate-gradient-x">
-      Saraswathi
+    I'am  Saraswathi
     </span>
 
     {/* Glow layer */}
