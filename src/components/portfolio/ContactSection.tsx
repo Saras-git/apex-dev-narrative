@@ -191,11 +191,7 @@ export default function ContactSection() {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-24 pt-10 border-t border-border/40">
-          <p className="text-muted-foreground text-sm font-mono">
-            Designed & Built by <span className="gradient-text font-semibold">Alex Kumar</span> · {new Date().getFullYear()}
-          </p>
-        </div>
+        
       </div>
     </section>
   );
