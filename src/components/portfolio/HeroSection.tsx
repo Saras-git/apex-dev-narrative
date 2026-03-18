@@ -130,7 +130,7 @@ Passionate about clean data pipelines, insightful visualizations, and solving co
             className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8"
           >
             <motion.a
-  href="\SARASWATHI S_CV.pdf"
+  href="\S SARASWATHI_CV.pdf"
   download
   whileHover={{ scale: 1.08, rotate: 1 }}
   whileTap={{ scale: 0.92 }}
@@ -194,3 +194,4 @@ Passionate about clean data pipelines, insightful visualizations, and solving co
     </section>
   );
 }
+
