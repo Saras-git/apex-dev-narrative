@@ -1,329 +1,649 @@
-import { motion } from "framer-motion";
-import { useState } from "react";
+/**
+ * AchievementsSection.tsx
+ * Premium "Achievements & Certifications" section
+ * Stack: React + TypeScript + Tailwind CSS + Framer Motion
+ */
 
-import udemyLogo from "@/assets/udemy.png";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useRef, useState, useCallback } from "react";
+
+// ─── Asset imports (update paths to match your project) ──────────────────────
+import udemyLogo    from "@/assets/udemy.png";
 import skillrackLogo from "@/assets/skillrack-icon.jpg";
-import nptelLogo from "@/assets/nptel.png";
+import nptelLogo    from "@/assets/nptel.png";
 
-/* certificate images */
-import certPython from "@/assets/certificates/udemy.jpg";
-import certC from "@/assets/certificates/c.png";
-import certKick from "@/assets/certificates/kickstart.png";
-import certBronze from "@/assets/certificates/bronze-200.png";
-import certNptel from "@/assets/certificates/nptel.png";
+import certPython   from "@/assets/certificates/udemy.jpg";
+import certC        from "@/assets/certificates/c.png";
+import certKick     from "@/assets/certificates/kickstart.png";
+import certBronze   from "@/assets/certificates/bronze-200.png";
+import certNptel    from "@/assets/certificates/nptel.png";
 
-/* publication image */
-import pubImg from "@/assets/publications/crop-ml.png";
+import pubCropML    from "@/assets/publications/crop-ml.png";
+import pubHealytics from "@/assets/publications/healytics.jpg"; // add when ready
 
-/* types */
-type Certificate = {
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface Skill {
+  label: string;
+}
+
+interface Certificate {
   title: string;
   org: string;
   year: string;
   logo: string;
   image: string;
-  credential?: string;
-  skills: string[];
+  credentialId?: string;
+  verifyUrl?: string;
+  skills: Skill[];
   description: string;
-};
+}
 
-type Publication = {
+interface Publication {
   title: string;
   org: string;
   date: string;
   description: string;
-  image: string;
-};
-
-/* certificate data */
-const certificates: Certificate[] = [
-{
-title:"Python Programming: A Practical Approach",
-org:"Udemy",
-year:"Aug 2025",
-logo:udemyLogo,
-image:certPython,
-credential:"UC-7cd16de1-b2c5-4e33-9c85-462b73e6b8ac",
-skills:["Python Programming","OOP","Problem Solving"],
-description:"Completed a 15-hour hands-on course covering Python fundamentals, problem solving, object-oriented programming, and real-world applications."
-},
-{
-title:"C - 50 Very Easy Challenges",
-org:"SkillRack",
-year:"Jan 2025",
-logo:skillrackLogo,
-image:certC,
-skills:["Debugging"],
-description:"Certified by SkillRack for completing 50 easy challenges in C programming and improving logic building."
-},
-{
-title:"Kickstart",
-org:"SkillRack",
-year:"Feb 2025",
-logo:skillrackLogo,
-image:certKick,
-skills:["Problem Solving"],
-description:"Certified in Kickstart coding challenges showcasing strong problem solving ability."
-},
-{
-title:"Bronze Medals - 200",
-org:"SkillRack",
-year:"Apr 2025",
-logo:skillrackLogo,
-image:certBronze,
-skills:["C","Competitive Coding"],
-description:"Achieved 200 bronze medals for completing programming challenges consistently."
-},
-{
-title:"The Joy of Computing using Python",
-org:"NPTEL",
-year:"Apr 2025",
-logo:nptelLogo,
-image:certNptel,
-credential:"NPTEL25CS98S1058801034",
-skills:["Python","Problem Solving","Logic"],
-description:"Completed 12-week NPTEL certification covering Python fundamentals and computational thinking."
+  image: string | null;
+  award?: string;        // e.g. "Best Research Paper"
+  tags?: string[];
+  paperUrl?: string;
 }
+
+type ModalItem = (Certificate & { _type: "certificate" }) | (Publication & { _type: "publication" });
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+const PUBLICATIONS: Publication[] = [
+  {
+    title: "Healytics AI: Compatibility Analytics for Organs",
+    org: "ICAIDAR 2026",
+    date: "Mar 2026",
+    award: "Best Research Paper",
+    tags: ["AI", "Healthcare", "Organ Compatibility", "Deep Learning"],
+    description:
+      "Proposed a novel AI-driven framework for predicting organ transplant compatibility using deep learning and multi-modal patient data. The system reduces rejection rates by surfacing incompatibility signals overlooked in traditional cross-matching, enabling smarter clinical decisions and saving lives.",
+    image: pubHealytics,
+  },
+  {
+    title: "Predicting Crop Yield and Plant Growth Using ML",
+    org: "ICICIC 2025",
+    date: "Apr 8, 2025",
+    tags: ["Machine Learning", "XGBoost", "AgriTech", "Web App"],
+    description:
+      "Presented research using XGBoost and ensemble ML models integrated into a full-stack web application for real-time agricultural yield prediction. The system empowers farmers and agronomists with data-driven insights for smarter decision-making and resource optimization.",
+    image: pubCropML,
+  },
 ];
 
-/* publication data */
-const publications: Publication[] = [
-{
-title:"Predicting Crop Yield and Plant Growth Using ML",
-org:"ICICIC'25 Conference",
-date:"Apr 8, 2025",
-description:"Presented research paper using XGBoost and ML models integrated into web app for agricultural prediction and smart decision making.",
-image: pubImg
-}
+const CERTIFICATES: Certificate[] = [
+  {
+    title: "Python Programming: A Practical Approach",
+    org: "Udemy",
+    year: "Aug 2025",
+    logo: udemyLogo,
+    image: certPython,
+    credentialId: "UC-7cd16de1-b2c5-4e33-9c85-462b73e6b8ac",
+    verifyUrl: "https://www.udemy.com/certificate/UC-7cd16de1-b2c5-4e33-9c85-462b73e6b8ac/",
+    skills: [{ label: "Python" }, { label: "OOP" }, { label: "Problem Solving" }],
+    description:
+      "Completed a 15-hour hands-on course covering Python fundamentals, problem solving, object-oriented programming, and real-world applications.",
+  },
+  {
+    title: "C — 50 Very Easy Challenges",
+    org: "SkillRack",
+    year: "Jan 2025",
+    logo: skillrackLogo,
+    image: certC,
+    skills: [{ label: "C" }, { label: "Debugging" }, { label: "Logic" }],
+    description:
+      "Certified by SkillRack for completing 50 structured challenges in C programming, strengthening debugging and logic-building skills.",
+  },
+  {
+    title: "Kickstart",
+    org: "SkillRack",
+    year: "Feb 2025",
+    logo: skillrackLogo,
+    image: certKick,
+    skills: [{ label: "Problem Solving" }, { label: "Algorithms" }],
+    description:
+      "Certified in Kickstart coding challenges, demonstrating strong problem-solving ability under timed conditions.",
+  },
+  {
+    title: "Bronze Medals — 200",
+    org: "SkillRack",
+    year: "Apr 2025",
+    logo: skillrackLogo,
+    image: certBronze,
+    skills: [{ label: "C" }, { label: "Competitive Coding" }, { label: "Consistency" }],
+    description:
+      "Achieved 200 bronze medals for consistently completing diverse programming challenges on the SkillRack platform.",
+  },
+  {
+    title: "The Joy of Computing using Python",
+    org: "NPTEL",
+    year: "Apr 2025",
+    logo: nptelLogo,
+    image: certNptel,
+    credentialId: "NPTEL25CS98S1058801034",
+    skills: [{ label: "Python" }, { label: "Computational Thinking" }, { label: "Logic" }],
+    description:
+      "Completed a 12-week NPTEL certification covering Python fundamentals, computational thinking, and creative problem solving.",
+  },
 ];
 
-/* component */
-export default function CertificationSection(){
+// ─── Reusable Modal ────────────────────────────────────────────────────────────
 
-const [active,setActive] = useState<Certificate | null>(null);
-const [activePub,setActivePub] = useState<Publication | null>(null);
+interface ModalProps {
+  item: ModalItem;
+  onClose: () => void;
+}
 
-return(
-<section id="certification" className="py-24 px-6 bg-background">
+function AchievementModal({ item, onClose }: ModalProps) {
+  const [imgZoomed, setImgZoomed] = useState(false);
 
-{/* heading */}
-<div className="max-w-5xl mx-auto text-center mb-16">
-<motion.h2
-initial={{opacity:0,y:30}}
-whileInView={{opacity:1,y:0}}
-className="text-4xl font-bold mb-3"
->
-Certifications
-</motion.h2>
+  const isCert = item._type === "certificate";
+  const isPub  = item._type === "publication";
+  const isBestPaper = isPub && !!(item as Publication).award;
 
-<p className="text-muted-foreground">
-Verified achievements, credentials & publications.
-</p>
-</div>
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        style={{ background: "rgba(5,5,10,0.82)", backdropFilter: "blur(18px)" }}
+      >
+        {/* Modal card */}
+        <motion.div
+          className="relative w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl"
+          initial={{ scale: 0.82, opacity: 0, y: 40 }}
+          animate={{ scale: 1,    opacity: 1, y: 0  }}
+          exit   ={{ scale: 0.88, opacity: 0, y: 20 }}
+          transition={{ type: "spring", stiffness: 300, damping: 28 }}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            background: isBestPaper
+              ? "linear-gradient(145deg,#1a1200 0%,#0f0f10 60%)"
+              : "var(--card, #0f0f12)",
+          }}
+        >
+          {/* Gold accent bar for best-paper */}
+          {isBestPaper && (
+            <div className="absolute inset-x-0 top-0 h-[3px]"
+              style={{ background: "linear-gradient(90deg,#f59e0b,#fcd34d,#f59e0b)" }} />
+          )}
 
-{/* certificate cards */}
-<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            aria-label="Close modal"
+            className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors"
+            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.55)" }}
+          >
+            ✕
+          </button>
 
-{certificates.map((c,i)=>(
-<motion.div
-key={c.title}
-initial={{opacity:0,scale:.85}}
-whileInView={{opacity:1,scale:1}}
-transition={{delay:i*.1,type:"spring"}}
-whileHover={{scale:1.04}}
-className="rounded-2xl p-[1px] bg-gradient-to-br from-primary to-purple-500"
->
+          <div className="p-7 max-h-[88vh] overflow-y-auto space-y-5 scrollbar-thin">
+            {/* Header */}
+            <div>
+              {isBestPaper && (
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full mb-3"
+                  style={{ background: "rgba(245,158,11,0.18)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.35)" }}>
+                  🏆 Best Research Paper
+                </span>
+              )}
+              <h3 className="text-xl sm:text-2xl font-bold leading-tight"
+                style={{ color: "#f1f1f1", fontFamily: "'Playfair Display', Georgia, serif" }}>
+                {item.title}
+              </h3>
+              <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.45)" }}>
+                {item.org}
+                {isCert && ` • ${(item as Certificate).year}`}
+                {isPub  && ` • ${(item as Publication).date}`}
+              </p>
+            </div>
 
-<div className="bg-card rounded-2xl p-6 border border-border shadow-lg h-full flex flex-col">
+            {/* Image */}
+            {(isCert || (isPub && (item as Publication).image)) && (
+              <motion.div
+                className="overflow-hidden rounded-xl cursor-zoom-in"
+                onClick={() => setImgZoomed(!imgZoomed)}
+                style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                <motion.img
+                  src={isCert ? (item as Certificate).image : (item as Publication).image!}
+                  alt={item.title}
+                  className="w-full object-cover"
+                  animate={{ scale: imgZoomed ? 1.55 : 1 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 24 }}
+                  style={{ transformOrigin: "center center" }}
+                />
+              </motion.div>
+            )}
 
-<img src={c.logo} className="h-10 w-10 mb-4 object-contain"/>
+            {/* No-image placeholder for Healytics */}
+            {isPub && !(item as Publication).image && (
+              <div className="rounded-xl flex items-center justify-center h-36 text-4xl"
+                style={{ background: "rgba(245,158,11,0.07)", border: "1px dashed rgba(245,158,11,0.3)" }}>
+                📄
+              </div>
+            )}
 
-<h3 className="font-semibold text-lg mb-1">{c.title}</h3>
-<p className="text-muted-foreground text-sm">{c.org}</p>
+            {/* Description */}
+            <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.62)" }}>
+              {item.description}
+            </p>
 
-<span className="inline-block mt-3 text-xs bg-primary/10 text-primary px-3 py-1 rounded-full">
-{c.year}
-</span>
+            {/* Skills / Tags */}
+            {(() => {
+              const tags = isCert
+                ? (item as Certificate).skills.map((s) => s.label)
+                : (item as Publication).tags ?? [];
+              return tags.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((t) => (
+                    <span key={t} className="text-xs px-3 py-1 rounded-full font-medium"
+                      style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.55)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              ) : null;
+            })()}
 
-<div className="flex flex-wrap gap-2 mt-4">
-{c.skills.map((s)=>(
-<span key={s} className="text-xs bg-muted px-2 py-1 rounded">
-{s}
-</span>
-))}
-</div>
+            {/* Credential ID */}
+            {isCert && (item as Certificate).credentialId && (
+              <p className="text-xs" style={{ color: "rgba(255,255,255,0.32)" }}>
+                Credential ID: {(item as Certificate).credentialId}
+              </p>
+            )}
 
-{c.credential && (
-<p className="text-xs mt-3 text-muted-foreground">
-ID: {c.credential}
-</p>
-)}
+            {/* Actions */}
+            <div className="flex gap-3 pt-1">
+              {isCert && (
+                <a href={(item as Certificate).image} download
+                  className="flex-1 text-center text-sm font-semibold py-2.5 rounded-xl transition-opacity hover:opacity-80"
+                  style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)", color: "#fff" }}>
+                  ↓ Download
+                </a>
+              )}
+              {isCert && (item as Certificate).verifyUrl && (
+                <a href={(item as Certificate).verifyUrl} target="_blank" rel="noreferrer"
+                  className="flex-1 text-center text-sm font-semibold py-2.5 rounded-xl transition-opacity hover:opacity-80"
+                  style={{ border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.7)" }}>
+                  Verify ↗
+                </a>
+              )}
+              {isPub && (item as Publication).paperUrl && (
+                <a href={(item as Publication).paperUrl} target="_blank" rel="noreferrer"
+                  className="flex-1 text-center text-sm font-semibold py-2.5 rounded-xl transition-opacity hover:opacity-80"
+                  style={{ background: "linear-gradient(135deg,#f59e0b,#d97706)", color: "#000" }}>
+                  Read Paper ↗
+                </a>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
 
-<button
-onClick={()=>setActive(c)}
-className="mt-auto text-sm text-primary font-medium hover:underline pt-4"
->
-Show Details →
-</button>
+// ─── Timeline dot ──────────────────────────────────────────────────────────────
 
-</div>
-</motion.div>
-))}
-</div>
+function TimelineDot({ gold }: { gold?: boolean }) {
+  return (
+    <div className="relative flex-shrink-0">
+      <motion.div
+        className="w-4 h-4 rounded-full z-10 relative"
+        style={{
+          background: gold
+            ? "linear-gradient(135deg,#f59e0b,#fcd34d)"
+            : "linear-gradient(135deg,#6366f1,#8b5cf6)",
+          boxShadow: gold
+            ? "0 0 12px 3px rgba(245,158,11,0.45)"
+            : "0 0 10px 2px rgba(89, 207, 243, 0.4)",
+        }}
+        animate={gold ? { boxShadow: ["0 0 12px 3px rgba(245,158,11,0.45)", "0 0 22px 6px rgba(245,158,11,0.25)", "0 0 12px 3px rgba(245,158,11,0.45)"] } : {}}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
+  );
+}
 
+// ─── Publication timeline card ─────────────────────────────────────────────────
 
-{/* publications */}
-<div className="max-w-4xl mx-auto mt-24">
+interface PubCardProps {
+  pub: Publication;
+  index: number;
+  onClick: () => void;
+}
 
-<h3 className="text-2xl font-semibold mb-8 text-center">
-Publications
-</h3>
+function PublicationCard({ pub, index, onClick }: PubCardProps) {
+  const isBest = !!pub.award;
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
 
-{publications.map((p,i)=>(
-<motion.div
-key={i}
-initial={{opacity:0,y:30}}
-whileInView={{opacity:1,y:0}}
-className="bg-card border border-border rounded-xl p-6 shadow mb-6 cursor-pointer hover:shadow-lg transition"
-onClick={()=>setActivePub(p)}
->
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -32 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ delay: index * 0.18, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      className="flex gap-5 group"
+    >
+      {/* Timeline spine */}
+      <div className="flex flex-col items-center">
+        <TimelineDot gold={isBest} />
+        {index < PUBLICATIONS.length - 1 && (
+          <div className="w-[2px] flex-1 mt-2"
+            style={{ background: "linear-gradient(to bottom,rgba(255,255,255,0.12),transparent)" }} />
+        )}
+      </div>
 
-<h4 className="font-semibold text-lg">{p.title}</h4>
-<p className="text-muted-foreground text-sm">{p.org} • {p.date}</p>
+      {/* Card */}
+      <motion.button
+        onClick={onClick}
+        whileHover={{ scale: 1.018, y: -2 }}
+        whileTap={{ scale: 0.99 }}
+        transition={{ type: "spring", stiffness: 340, damping: 26 }}
+        className="flex-1 text-left mb-10 rounded-2xl overflow-hidden focus:outline-none"
+        style={{
+          background: isBest
+            ? "linear-gradient(135deg,rgba(30,20,0,0.95) 0%,rgba(20,15,0,0.9) 100%)"
+            : "rgba(47, 192, 217, 0.04)",
+          border: isBest
+            ? "1px solid rgba(245,158,11,0.35)"
+            : "1px solid rgba(255,255,255,0.08)",
+          boxShadow: isBest
+            ? "0 0 40px -8px rgba(245,158,11,0.22), inset 0 1px 0 rgba(255,255,255,0.06)"
+            : "0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
+        }}
+      >
+        {/* Gold shimmer strip */}
+        {isBest && (
+          <div className="h-[2px] w-full"
+            style={{ background: "linear-gradient(90deg,transparent,#f59e0b 40%,#fcd34d 60%,transparent)" }} />
+        )}
 
-<p className="mt-3 text-sm line-clamp-3">
-{p.description}
-</p>
+        <div className="p-6 sm:p-7">
+          {/* Award badge */}
+          {isBest && (
+            <motion.span
+              className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full mb-4"
+              style={{ background: "rgba(245,158,11,0.15)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.4)", letterSpacing: "0.04em" }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.35 + index * 0.18 }}
+            >
+              🏆 {pub.award}
+            </motion.span>
+          )}
 
-<p className="text-primary text-sm mt-4 font-medium">
-View Publication →
-</p>
+          <h4 className="text-base sm:text-lg font-bold leading-snug mb-1"
+            style={{ color: isBest ? "#fef3c7" : "#e8e8ef", fontFamily: "'Playfair Display', Georgia, serif" }}>
+            {pub.title}
+          </h4>
 
-</motion.div>
-))}
+          <p className="text-xs font-medium mb-3" style={{ color: isBest ? "rgba(251,191,36,0.7)" : "rgba(255,255,255,0.4)" }}>
+            {pub.org} &nbsp;·&nbsp; {pub.date}
+          </p>
 
-</div>
+          <p className="text-sm leading-relaxed line-clamp-2" style={{ color: "rgba(255,255,255,0.52)" }}>
+            {pub.description}
+          </p>
 
+          {pub.tags && (
+            <div className="flex flex-wrap gap-1.5 mt-4">
+              {pub.tags.map((t) => (
+                <span key={t} className="text-[11px] px-2.5 py-0.5 rounded-full"
+                  style={{
+                    background: isBest ? "rgba(245,158,11,0.1)" : "rgba(255,255,255,0.05)",
+                    color: isBest ? "rgba(251,191,36,0.75)" : "rgba(255,255,255,0.42)",
+                    border: `1px solid ${isBest ? "rgba(245,158,11,0.22)" : "rgba(255,255,255,0.08)"}`,
+                  }}>
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
 
-{/* certificate modal */}
-{active && (
-<div
-className="fixed inset-0 bg-black/70 backdrop-blur flex items-center justify-center z-50 p-4"
-onClick={()=>setActive(null)}
->
+          <p className="text-xs font-semibold mt-5 flex items-center gap-1"
+            style={{ color: isBest ? "#f59e0b" : "rgba(96, 185, 220, 0.85)" }}>
+            View Details
+            <span className="transition-transform group-hover:translate-x-1 duration-200">→</span>
+          </p>
+        </div>
+      </motion.button>
+    </motion.div>
+  );
+}
 
-<motion.div
-initial={{scale:.8,opacity:0}}
-animate={{scale:1,opacity:1}}
-onClick={(e)=>e.stopPropagation()}
-className="bg-card w-full max-w-2xl rounded-2xl shadow-2xl relative overflow-hidden"
->
+// ─── Certificate card ──────────────────────────────────────────────────────────
 
-<button
-onClick={()=>setActive(null)}
-className="absolute top-4 right-4 text-muted-foreground text-xl"
->
-✕
-</button>
+interface CertCardProps {
+  cert: Certificate;
+  index: number;
+  onClick: () => void;
+}
 
-<div className="p-6 max-h-[90vh] overflow-y-auto">
+function CertificateCard({ cert, index, onClick }: CertCardProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
-<h3 className="text-2xl font-bold mb-2">{active.title}</h3>
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 28, scale: 0.94 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ delay: index * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <motion.button
+        onClick={onClick}
+        whileHover={{ scale: 1.03, y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 340, damping: 26 }}
+        className="w-full text-left rounded-2xl p-[1px] focus:outline-none group"
+        style={{
+          background: "linear-gradient(135deg,rgba(53, 198, 224, 0.5),rgba(28, 151, 246, 0.3),rgba(255,255,255,0.06))",
+        }}
+      >
+        <div className="rounded-2xl p-5 h-full flex flex-col transition-all duration-300"
+          style={{
+            background: "rgba(12,12,18,0.97)",
+            boxShadow: "0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+          }}>
+          {/* Logo + year row */}
+          <div className="flex items-start justify-between mb-4">
+            <img src={cert.logo} alt={cert.org}
+              className="h-9 w-9 rounded-lg object-contain"
+              style={{ background: "rgba(255,255,255,0.06)", padding: "4px" }} />
+            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full"
+              style={{ background: "rgba(38, 203, 240, 0.15)", color: "rgba(167,164,255,0.9)", border: "1px solid rgba(99, 210, 241, 0.25)" }}>
+              {cert.year}
+            </span>
+          </div>
 
-<p className="text-muted-foreground text-sm mb-4">
-{active.org} • {active.year}
-</p>
+          {/* Title */}
+          <h4 className="text-sm font-bold leading-snug mb-1"
+            style={{ color: "#dddde8", fontFamily: "'Playfair Display', Georgia, serif" }}>
+            {cert.title}
+          </h4>
 
-<p className="text-sm mb-6">{active.description}</p>
+          <p className="text-xs mb-4" style={{ color: "rgba(255,255,255,0.38)" }}>
+            {cert.org}
+          </p>
 
-<img
-src={active.image}
-className="w-full rounded-xl mb-6"
-/>
+          {/* Skills */}
+          <div className="flex flex-wrap gap-1.5 mt-auto mb-4">
+            {cert.skills.map((s) => (
+              <span key={s.label} className="text-[11px] px-2 py-0.5 rounded-full"
+                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.42)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                {s.label}
+              </span>
+            ))}
+          </div>
 
-{active.credential && (
-<p className="text-xs text-muted-foreground mb-4">
-Credential ID: {active.credential}
-</p>
-)}
+          {cert.credentialId && (
+            <p className="text-[10px] truncate mb-3" style={{ color: "rgba(255,255,255,0.25)" }}>
+              ID: {cert.credentialId}
+            </p>
+          )}
 
-<div className="flex flex-wrap gap-2 mb-6">
-{active.skills.map((s)=>(
-<span key={s} className="text-xs bg-muted px-3 py-1 rounded-full">
-{s}
-</span>
-))}
-</div>
+          <p className="text-xs font-semibold flex items-center gap-1"
+            style={{ color: "rgba(47, 243, 236, 0.85)" }}>
+            Show Details
+            <span className="transition-transform group-hover:translate-x-1 duration-200">→</span>
+          </p>
+        </div>
+      </motion.button>
+    </motion.div>
+  );
+}
 
-<div className="flex gap-3">
+// ─── Section heading ───────────────────────────────────────────────────────────
 
-<a
-href={active.image}
-download
-className="flex-1 text-center bg-primary text-white text-sm py-2 rounded-lg"
->
-Download
-</a>
+function SectionHeading({ label, title, sub }: { label: string; title: string; sub?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true });
 
-{active.credential && (
-<a
-href={`https://www.google.com/search?q=${active.credential}`}
-target="_blank"
-className="flex-1 text-center border text-sm py-2 rounded-lg"
->
-Verify
-</a>
-)}
+  return (
+    <motion.div
+      ref={ref}
+      className="mb-14 text-center"
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <span className="inline-block text-xs font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full mb-5"
+        style={{ background: "rgba(59, 221, 233, 0.12)", color: "rgba(167,164,255,0.8)", border: "1px solid rgba(106, 188, 242, 0.22)" }}>
+        {label}
+      </span>
+      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight mb-3"
+        style={{ color: "#f1f1f5", fontFamily: "'Playfair Display', Georgia, serif", letterSpacing: "-0.02em" }}>
+        {title}
+      </h2>
+      {sub && (
+        <p className="text-sm sm:text-base max-w-xl mx-auto" style={{ color: "rgba(255,255,255,0.42)" }}>
+          {sub}
+        </p>
+      )}
+    </motion.div>
+  );
+}
 
-</div>
+// ─── Divider ──────────────────────────────────────────────────────────────────
 
-</div>
-</motion.div>
-</div>
-)}
+function Divider() {
+  return (
+    <div className="my-20 flex items-center gap-4 max-w-3xl mx-auto px-6">
+      <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(to right,transparent,rgba(255,255,255,0.1))" }} />
+      <div className="w-2 h-2 rounded-full" style={{ background: "rgba(21, 187, 220, 0.6)" }} />
+      <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(to left,transparent,rgba(255,255,255,0.1))" }} />
+    </div>
+  );
+}
 
+// ─── Main section ──────────────────────────────────────────────────────────────
 
-{/* publication modal */}
-{activePub && (
-<div
-className="fixed inset-0 bg-black/70 backdrop-blur flex items-center justify-center z-50 p-4"
-onClick={()=>setActivePub(null)}
->
+export default function AchievementsSection() {
+  const [modal, setModal] = useState<ModalItem | null>(null);
 
-<motion.div
-initial={{scale:.8,opacity:0}}
-animate={{scale:1,opacity:1}}
-onClick={(e)=>e.stopPropagation()}
-className="bg-card w-full max-w-2xl rounded-2xl shadow-2xl relative"
->
+  const openCert = useCallback((c: Certificate) => {
+    setModal({ ...c, _type: "certificate" });
+  }, []);
 
-<button
-onClick={()=>setActivePub(null)}
-className="absolute top-4 right-4 text-muted-foreground text-xl"
->
-✕
-</button>
+  const openPub = useCallback((p: Publication) => {
+    setModal({ ...p, _type: "publication" });
+  }, []);
 
-<div className="p-6">
+  const closeModal = useCallback(() => setModal(null), []);
 
-<h3 className="text-2xl font-bold mb-2">{activePub.title}</h3>
+  return (
+    <section
+      id="achievements"
+      className="relative min-h-screen py-24 px-6 overflow-hidden"
+      style={{ background: "#07070b" }}
+    >
+      {/* Ambient blobs */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full opacity-[0.07]"
+          style={{ background: "radial-gradient(ellipse,#6366f1,transparent 70%)", filter: "blur(60px)" }} />
+        <div className="absolute top-1/3 -right-40 w-[400px] h-[400px] rounded-full opacity-[0.06]"
+          style={{ background: "radial-gradient(ellipse,#f59e0b,transparent 70%)", filter: "blur(80px)" }} />
+        <div className="absolute bottom-0 -left-40 w-[400px] h-[400px] rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(ellipse,#8b5cf6,transparent 70%)", filter: "blur(80px)" }} />
+      </div>
 
-<p className="text-muted-foreground text-sm mb-4">
-{activePub.org} • {activePub.date}
-</p>
+      {/* Content */}
+      <div className="relative max-w-5xl mx-auto">
+        {/* Main heading */}
+        <SectionHeading
+          label="🏆"
+          title="Achievements & Certifications"
+          sub="Research publications, awards, and verified credentials that define the journey."
+        />
 
-<img
-src={activePub.image}
-className="w-full rounded-xl mb-6"
-/>
+        {/* ── Publications ── */}
+        <div className="mb-4">
+          <motion.h3
+            className="text-lg font-bold uppercase tracking-widest mb-8 flex items-center gap-3"
+            style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.7rem", letterSpacing: "0.18em" }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="inline-block w-6 h-[1px]" style={{ background: "rgba(245,158,11,0.6)" }} />
+            Publications & Research
+          </motion.h3>
 
-<p className="text-sm">{activePub.description}</p>
+          <div className="max-w-3xl">
+            {PUBLICATIONS.map((pub, i) => (
+              <PublicationCard
+                key={pub.title}
+                pub={pub}
+                index={i}
+                onClick={() => openPub(pub)}
+              />
+            ))}
+          </div>
+        </div>
 
-</div>
-</motion.div>
-</div>
-)}
+        <Divider />
 
-</section>
-);
+        {/* ── Certifications ── */}
+        <motion.h3
+          className="text-lg font-bold mb-8 flex items-center gap-3"
+          style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.7rem", letterSpacing: "0.18em", textTransform: "uppercase" }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="inline-block w-6 h-[1px]" style={{ background: "rgba(110, 187, 250, 0.7)" }} />
+          Verified Certifications
+        </motion.h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {CERTIFICATES.map((cert, i) => (
+            <CertificateCard
+              key={cert.title}
+              cert={cert}
+              index={i}
+              onClick={() => openCert(cert)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Modal */}
+      <AnimatePresence>
+        {modal && <AchievementModal item={modal} onClose={closeModal} />}
+      </AnimatePresence>
+    </section>
+  );
 }
