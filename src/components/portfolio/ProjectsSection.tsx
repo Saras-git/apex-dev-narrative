@@ -119,7 +119,7 @@ const projects = [
       "CLI",
     ],
     github: "https://github.com/Saras-git/python-projects",
-    live: "#",
+    live: "https://python-projects-ddy9.onrender.com",
     featured: false,
   },
   {
