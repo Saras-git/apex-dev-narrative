@@ -7,7 +7,8 @@ import { staggerContainer, fadeInUp, fadeInLeft, fadeInRight } from "@/lib/anima
 const contactInfo = [
   { icon: Phone, label: "Phone", value: "+91 6369033799", href: "tel:+6369033799" },
   { icon: Mail, label: "Email", value: "saraswathisubbaiah02@gmail.com", href: "mailto:saraswathisubbaiah02@gmail.com" },
-  { icon: MapPin, label: "Location", value: "Tirunelveli, Tamil Nadu, India", href: "https://maps.app.goo.gl/KFNyeuH7PxjV4Qd37" },
+  { icon: MapPin, label: "Location", value: "Tamil Nadu, India (Open to relocate to Chennai , Bangalore & Mumbai)",
+  href: "https://maps.google.com"},
 ];
 
 export default function ContactSection() {
